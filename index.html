@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>canva's space · unblocked games</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, system-ui, sans-serif;
+        }
+        body {
+            background: #0b0f1c;
+            min-height: 100vh;
+            color: #fff;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1.5rem 2rem;
+        }
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        .logo h1 {
+            font-size: 2.5rem;
+            font-weight: 600;
+            background: linear-gradient(135deg, #a8c0ff, #8ec5fc, #a3bffa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.5px;
+        }
+        .logo span {
+            font-size: 1rem;
+            background: #1e2a3a;
+            padding: 0.3rem 1rem;
+            border-radius: 30px;
+            color: #b3d9ff;
+            margin-left: 0.5rem;
+        }
+        .search-box {
+            background: #161f2b;
+            border-radius: 40px;
+            padding: 0.3rem 1.5rem;
+            border: 1px solid #2e3b4b;
+            display: flex;
+            align-items: center;
+        }
+        .search-box input {
+            background: transparent;
+            border: none;
+            padding: 0.8rem 0;
+            font-size: 1.1rem;
+            color: white;
+            width: 240px;
+            outline: none;
+        }
+        .search-box input::placeholder {
+            color: #607586;
+        }
+        .count {
+            background: #1f2c38;
+            padding: 0.5rem 1.2rem;
+            border-radius: 30px;
+            font-size: 0.95rem;
+            color: #bfd9ff;
+        }
+        .game-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+            gap: 1.2rem;
+            margin: 2rem 0 3rem;
+        }
+        .game-card {
+            background: #131d26;
+            border: 1px solid #25323f;
+            border-radius: 24px;
+            padding: 1.5rem 0.5rem 1rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 8px 0 #0a1117;
+        }
+        .game-card:hover {
+            transform: translateY(-3px);
+            border-color: #5f8ab0;
+            box-shadow: 0 10px 0 #0a1117;
+            background: #16222e;
+        }
+        .game-title {
+            font-weight: 600;
+            font-size: 1.2rem;
+            color: #e6f0ff;
+            padding: 0.3rem 0.5rem;
+            border-radius: 30px;
+            display: inline-block;
+            width: 90%;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(8, 12, 20, 0.95);
+            backdrop-filter: blur(8px);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal.active {
+            display: flex;
+        }
+        .modal-content {
+            width: 95vw;
+            height: 95vh;
+            background: #0f1724;
+            border-radius: 32px;
+            border: 1px solid #3e566b;
+            box-shadow: 0 25px 50px -8px black;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.8rem 1.8rem;
+            background: #1b2635;
+            border-bottom: 1px solid #31465a;
+        }
+        .modal-header h2 {
+            font-size: 1.4rem;
+            font-weight: 500;
+            color: #d6eaff;
+        }
+        .close-btn {
+            background: #2d4055;
+            border: none;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            font-size: 1.8rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: 0.2s;
+            line-height: 1;
+        }
+        .close-btn:hover {
+            background: #b83b3b;
+            transform: scale(1.05);
+        }
+        .fullscreen-btn {
+            background: #2d4055;
+            border: none;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: 0.2s;
+            margin-right: 1rem;
+        }
+        .fullscreen-btn:hover {
+            background: #4d6b88;
+        }
+        .modal-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+        .game-frame-container {
+            flex: 1;
+            background: #0b1119;
+            position: relative;
+        }
+        #gameFrame {
+            width: 100%;
+            height: 100%;
+            border: none;
+            background: white;
+        }
+        .no-results {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 4rem;
+            background: #121d27;
+            border-radius: 40px;
+            color: #8aa5c0;
+            font-size: 1.5rem;
+            border: 2px dashed #2d4b62;
+        }
+        .footer {
+            display: flex;
+            justify-content: space-between;
+            color: #5f7990;
+            font-size: 0.9rem;
+            border-top: 1px solid #1d2c39;
+            padding-top: 1.5rem;
+            margin-top: 1rem;
+        }
+        .pointer-note {
+            background: #1f2c38;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            color: #ffd966;
+            display: inline-block;
+            margin-top: 0.3rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <h1>canva's space</h1>
+                <span>no register · fresh picks</span>
+            </div>
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="🔍 find game...">
+            </div>
+            <div class="count" id="gameCount">12 games</div>
+        </header>
+
+        <div id="gameGrid" class="game-grid"></div>
+        
+        <div class="footer">
+            <span>⚡ click any card → play inside</span>
+            <span>✕ close or fullscreen</span>
+            <span>🎮 Stickman Hook added</span>
+        </div>
+    </div>
+
+    <div id="gameModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalGameTitle">8 Ball Pool</h2>
+                <div style="display: flex;">
+                    <button class="fullscreen-btn" id="fullscreenBtn" title="full screen">⛶</button>
+                    <button class="close-btn" id="closeModalBtn">✕</button>
+                </div>
+            </div>
+            <div class="game-frame-container">
+                <iframe id="gameFrame" sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-modals allow-downloads allow-presentation allow-pointer-lock" allowfullscreen></iframe>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const games = [
+            { name: "8 Ball Pool", url: "8ballpool.html" },
+            { name: "OvO 3 Dimensions", url: "ovo3.html", note: "new" },
+            { name: "Crossy Road", url: "crossyroad.htm", note: "fixed" },
+            { name: "Baldi's Basics Plus", url: "baldi.html", note: "tested" },
+            { name: "Flappy Bird", url: "https://gititgit1113.github.io/wixland/flop/index.html", note: "tested" },
+            { name: "2048", url: "https://gititgit1113.github.io/wixland/2048.html", note: "" },
+            { name: "Minecraft Classic", url: "https://classic.minecraft.net/", note: "" },
+            { name: "Minecraft 1.12.2", url: "eagle1122.html", note: "" },
+            { name: "FNaF", url: "fnaf.html", note: "new" },
+            { name: "Geometry Dash", url: "gd.html", note: "new" },
+            { name: "Pacman", url: "pacman.html", note: "new" },
+            { name: "Angry Birds", url: "angrybirds.html", note: "new" },
+            { name: "Stickman Hook", url: "stickmanhook.html", note: "new" }
+        ];
+
+        const grid = document.getElementById('gameGrid');
+        const searchInput = document.getElementById('searchInput');
+        const gameCount = document.getElementById('gameCount');
+        const modal = document.getElementById('gameModal');
+        const modalTitle = document.getElementById('modalGameTitle');
+        const gameFrame = document.getElementById('gameFrame');
+        const closeBtn = document.getElementById('closeModalBtn');
+        const fullscreenBtn = document.getElementById('fullscreenBtn');
+
+        function renderGames(filter = '') {
+            const term = filter.toLowerCase();
+            const filtered = games.filter(g => g.name.toLowerCase().includes(term));
+            
+            gameCount.textContent = filtered.length + ' game' + (filtered.length !== 1 ? 's' : '');
+            
+            if (filtered.length === 0) {
+                grid.innerHTML = '<div class="no-results">✨ no games match · try another search</div>';
+                return;
+            }
+
+            let html = '';
+            filtered.forEach(game => {
+                html += `
+                    <div class="game-card" data-name="${game.name}" data-url="${game.url}">
+                        <div class="game-title">${game.name}</div>
+                        ${game.note ? `<div class="pointer-note">${game.note}</div>` : ''}
+                    </div>
+                `;
+            });
+            grid.innerHTML = html;
+
+            document.querySelectorAll('.game-card').forEach(card => {
+                card.addEventListener('click', () => {
+                    const name = card.dataset.name;
+                    const url = card.dataset.url;
+                    modalTitle.textContent = name;
+                    gameFrame.src = url;
+                    modal.classList.add('active');
+                });
+            });
+        }
+
+        searchInput.addEventListener('input', (e) => {
+            renderGames(e.target.value);
+        });
+
+        closeBtn.addEventListener('click', () => {
+            modal.classList.remove('active');
+            gameFrame.src = 'about:blank';
+        });
+
+        fullscreenBtn.addEventListener('click', () => {
+            const container = document.querySelector('.modal-content');
+            if (container.requestFullscreen) {
+                container.requestFullscreen();
+            }
+        });
+
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.classList.remove('active');
+                gameFrame.src = 'about:blank';
+            }
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && modal.classList.contains('active')) {
+                modal.classList.remove('active');
+                gameFrame.src = 'about:blank';
+            }
+        });
+
+        renderGames();
+    </script>
+</body>
+</html>
