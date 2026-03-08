@@ -3,364 +3,207 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>canva's space · unblocked games</title>
+    <title>canva's space</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, system-ui, sans-serif;
-        }
-        body {
-            background: #0b0f1c;
-            min-height: 100vh;
-            color: #fff;
-        }
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 1.5rem 2rem;
-        }
-        header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 1rem;
-            margin-bottom: 2rem;
-        }
-        .logo h1 {
-            font-size: 2.5rem;
-            font-weight: 600;
-            background: linear-gradient(135deg, #a8c0ff, #8ec5fc, #a3bffa);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            letter-spacing: -0.5px;
-        }
-        .logo span {
-            font-size: 1rem;
-            background: #1e2a3a;
-            padding: 0.3rem 1rem;
-            border-radius: 30px;
-            color: #b3d9ff;
-            margin-left: 0.5rem;
-        }
-        .search-box {
-            background: #161f2b;
-            border-radius: 40px;
-            padding: 0.3rem 1.5rem;
-            border: 1px solid #2e3b4b;
-            display: flex;
-            align-items: center;
-        }
-        .search-box input {
-            background: transparent;
-            border: none;
-            padding: 0.8rem 0;
-            font-size: 1.1rem;
-            color: white;
-            width: 240px;
-            outline: none;
-        }
-        .search-box input::placeholder {
-            color: #607586;
-        }
-        .count {
-            background: #1f2c38;
-            padding: 0.5rem 1.2rem;
-            border-radius: 30px;
-            font-size: 0.95rem;
-            color: #bfd9ff;
-        }
-        .game-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
-            gap: 1.2rem;
-            margin: 2rem 0 3rem;
-        }
-        .game-card {
-            background: #131d26;
-            border: 1px solid #25323f;
-            border-radius: 24px;
-            padding: 1.5rem 0.5rem 1rem;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            box-shadow: 0 8px 0 #0a1117;
-        }
-        .game-card:hover {
-            transform: translateY(-3px);
-            border-color: #5f8ab0;
-            box-shadow: 0 10px 0 #0a1117;
-            background: #16222e;
-        }
-        .game-title {
-            font-weight: 600;
-            font-size: 1.2rem;
-            color: #e6f0ff;
-            padding: 0.3rem 0.5rem;
-            border-radius: 30px;
-            display: inline-block;
-            width: 90%;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(8, 12, 20, 0.95);
-            backdrop-filter: blur(8px);
-            z-index: 1000;
-            justify-content: center;
-            align-items: center;
-        }
-        .modal.active {
-            display: flex;
-        }
-        .modal-content {
-            width: 95vw;
-            height: 95vh;
-            background: #0f1724;
-            border-radius: 32px;
-            border: 1px solid #3e566b;
-            box-shadow: 0 25px 50px -8px black;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-        }
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0.8rem 1.8rem;
-            background: #1b2635;
-            border-bottom: 1px solid #31465a;
-        }
-        .modal-header h2 {
-            font-size: 1.4rem;
-            font-weight: 500;
-            color: #d6eaff;
-        }
-        .close-btn {
-            background: #2d4055;
-            border: none;
-            color: white;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            font-size: 1.8rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: 0.2s;
-            line-height: 1;
-        }
-        .close-btn:hover {
-            background: #b83b3b;
-            transform: scale(1.05);
-        }
-        .fullscreen-btn {
-            background: #2d4055;
-            border: none;
-            color: white;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            font-size: 1.3rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: 0.2s;
-            margin-right: 1rem;
-        }
-        .fullscreen-btn:hover {
-            background: #4d6b88;
-        }
-        .modal-actions {
-            display: flex;
-            gap: 0.5rem;
-        }
-        .game-frame-container {
-            flex: 1;
-            background: #0b1119;
-            position: relative;
-        }
-        #gameFrame {
-            width: 100%;
-            height: 100%;
-            border: none;
-            background: white;
-        }
-        .no-results {
-            grid-column: 1 / -1;
-            text-align: center;
-            padding: 4rem;
-            background: #121d27;
-            border-radius: 40px;
-            color: #8aa5c0;
-            font-size: 1.5rem;
-            border: 2px dashed #2d4b62;
-        }
-        .footer {
-            display: flex;
-            justify-content: space-between;
-            color: #5f7990;
-            font-size: 0.9rem;
-            border-top: 1px solid #1d2c39;
-            padding-top: 1.5rem;
-            margin-top: 1rem;
-        }
-        .pointer-note {
-            background: #1f2c38;
-            padding: 0.3rem 0.8rem;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            color: #ffd966;
-            display: inline-block;
-            margin-top: 0.3rem;
-        }
+        *{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',Roboto,system-ui,sans-serif;}
+        body{min-height:100vh;background:#000;color:#fff;overflow-x:hidden;}
+        #stars{position:fixed;top:0;left:0;width:100%;height:100%;background:#000;z-index:0;}
+        @keyframes d{0%{transform:translate(0,0);}100%{transform:translate(8px,12px);}}
+        .s{position:absolute;background:#fff;border-radius:50%;width:2px;height:2px;box-shadow:0 0 6px #fff;opacity:0.8;animation:d 25s infinite alternate ease-in-out;will-change:transform;}
+        .s.m{width:3px;height:3px;box-shadow:0 0 10px #fff;}
+        .s.l{width:4px;height:4px;box-shadow:0 0 14px #fff;}
+        .main-layout{display:flex;min-height:100vh;position:relative;z-index:5;}
+        .side-nav{width:80px;background:rgba(0,0,0,0.8);backdrop-filter:blur(4px);border-left:1px solid #2a3f5a;display:flex;flex-direction:column;align-items:center;padding:2rem 0;gap:2rem;position:fixed;right:0;top:0;bottom:0;z-index:20;}
+        .nav-item{display:flex;flex-direction:column;align-items:center;color:#a0b5d0;cursor:pointer;width:100%;padding:0.7rem 0;border-radius:40px 0 0 40px;transition:0.15s;}
+        .nav-item.active{background:linear-gradient(90deg,transparent,#132337);border-right:4px solid #5f9eff;color:#fff;text-shadow:0 0 5px #5f9eff;}
+        .nav-icon{font-size:2rem;margin-bottom:0.2rem;}
+        .nav-label{font-size:0.75rem;letter-spacing:0.5px;}
+        .content-area{flex:1;margin-right:80px;padding:1.5rem;max-width:calc(100% - 80px);display:flex;align-items:center;justify-content:center;z-index:10;}
+        .home-panel{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;width:100%;}
+        .games-panel{display:none;width:100%;}
+        .main-title{font-size:5rem;font-weight:700;background:linear-gradient(145deg,#fff 0%,#c0d5ff 80%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;filter:drop-shadow(0 0 20px #2f6eb0);line-height:1.2;margin-bottom:0.5rem;}
+        .version-text{font-size:1rem;color:#7f8fa3;background:rgba(20,30,45,0.5);padding:0.3rem 1.2rem;border-radius:60px;backdrop-filter:blur(2px);border:1px solid #2d4057;}
+        .games-header{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:0.8rem;margin-bottom:2rem;background:rgba(0,0,0,0.4);backdrop-filter:blur(4px);padding:0.6rem 1.5rem;border-radius:50px;border:1px solid #2e4a6a;}
+        .search-box{background:rgba(5,10,20,0.8);border-radius:50px;padding:0.2rem 0.2rem 0.2rem 1.5rem;border:1px solid #3a608a;display:flex;align-items:center;width:220px;}
+        .search-box input{background:transparent;border:none;padding:0.6rem 0;font-size:0.95rem;color:#fff;width:100%;outline:none;}
+        .search-box input::placeholder{color:#7f99bb;}
+        .count{background:#102433;padding:0.4rem 1.2rem;border-radius:50px;color:#b5d0ff;border:1px solid #2f5585;font-size:0.9rem;}
+        .game-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:1.2rem;margin:1.5rem 0;}
+        .game-card{background:rgba(5,12,24,0.8);backdrop-filter:blur(4px);border:1px solid #2d4b73;border-radius:24px;padding:1.2rem 0.2rem 0.8rem;text-align:center;cursor:pointer;transition:0.15s;box-shadow:0 4px 0 #02060c;}
+        .game-card:hover{transform:translateY(-3px);border-color:#6b9eff;box-shadow:0 8px 0 #02060c,0 0 15px #23487a;background:rgba(12,25,45,0.9);}
+        .game-title{font-weight:600;font-size:1rem;color:#e0edff;padding:0.2rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+        .pointer-note{background:#1e3148;padding:0.2rem 0.6rem;border-radius:30px;font-size:0.65rem;color:#ffdcaa;display:inline-block;margin-top:0.4rem;border:1px solid #a3864a;}
+        .no-results{grid-column:1/-1;text-align:center;padding:2.5rem;background:rgba(0,0,0,0.6);border-radius:50px;color:#9bb5d9;border:2px dashed #3f6190;}
+        .modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.98);backdrop-filter:blur(16px);z-index:1000;justify-content:center;align-items:center;}
+        .modal.active{display:flex;}
+        .modal-content{width:96vw;height:94vh;background:#030812;border-radius:36px;border:2px solid #2f5690;display:flex;flex-direction:column;overflow:hidden;}
+        .modal-header{display:flex;justify-content:space-between;align-items:center;padding:0.6rem 1.5rem;background:#0b1a2c;border-bottom:2px solid #26497a;}
+        .modal-header h2{color:#d6eaff;font-size:1.3rem;}
+        .close-btn,.fullscreen-btn{background:#1d3452;border:none;color:#fff;width:38px;height:38px;border-radius:50%;font-size:1.4rem;cursor:pointer;border:1px solid #5b80b5;margin-left:0.4rem;display:inline-flex;align-items:center;justify-content:center;}
+        .close-btn:hover{background:#b83b3b;}
+        .fullscreen-btn:hover{background:#2f5f99;}
+        .game-frame-container{flex:1;background:#000;}
+        #gameFrame{width:100%;height:100%;border:none;background:#0b1424;}
     </style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <div class="logo">
-                <h1>canva's space</h1>
-                <span>no register · fresh picks</span>
+    <div id="stars"></div>
+    <div class="main-layout">
+        <div class="side-nav">
+            <div class="nav-item active" id="navHome"><div class="nav-icon">⌂</div><div class="nav-label">HOME</div></div>
+            <div class="nav-item" id="navGames"><div class="nav-icon">▤</div><div class="nav-label">GAMES</div></div>
+        </div>
+        <div class="content-area">
+            <div id="homePanel" class="home-panel"><div class="main-title">canva's space</div><div class="version-text">version 1.7.3</div></div>
+            <div id="gamesPanel" class="games-panel">
+                <div class="games-header"><div class="search-box"><input type="text" id="searchInput" placeholder="find game..."></div><div class="count" id="gameCount">18 games</div></div>
+                <div id="gameGrid" class="game-grid"></div>
             </div>
-            <div class="search-box">
-                <input type="text" id="searchInput" placeholder="🔍 find game...">
-            </div>
-            <div class="count" id="gameCount">12 games</div>
-        </header>
-
-        <div id="gameGrid" class="game-grid"></div>
-        
-        <div class="footer">
-            <span>⚡ click any card → play inside</span>
-            <span>✕ close or fullscreen</span>
-            <span>🎮 Sonic 1 Mania Edition added</span>
         </div>
     </div>
-
     <div id="gameModal" class="modal">
         <div class="modal-content">
-            <div class="modal-header">
-                <h2 id="modalGameTitle">8 Ball Pool</h2>
-                <div style="display: flex;">
-                    <button class="fullscreen-btn" id="fullscreenBtn" title="full screen">⛶</button>
-                    <button class="close-btn" id="closeModalBtn">✕</button>
-                </div>
-            </div>
-            <div class="game-frame-container">
-                <iframe id="gameFrame" sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-modals allow-downloads allow-presentation allow-pointer-lock" allowfullscreen></iframe>
-            </div>
+            <div class="modal-header"><h2 id="modalGameTitle">8 Ball Pool</h2><div><button class="fullscreen-btn" id="fullscreenBtn">⛶</button><button class="close-btn" id="closeModalBtn">✕</button></div></div>
+            <div class="game-frame-container"><iframe id="gameFrame" sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-modals allow-downloads allow-presentation allow-pointer-lock" allowfullscreen></iframe></div>
         </div>
     </div>
-
     <script>
+        (function(){
+            const stars = document.getElementById('stars');
+            stars.innerHTML = '';
+            const starCount = 150;
+            for(let i = 0; i < starCount; i++) {
+                const d = document.createElement('div');
+                d.className = 's';
+                const r = Math.random();
+                if(r > 0.9) d.classList.add('l');
+                else if(r > 0.7) d.classList.add('m');
+                d.style.left = Math.random() * 100 + '%';
+                d.style.top = Math.random() * 100 + '%';
+                d.style.animationDelay = (Math.random() * 10) + 's';
+                stars.appendChild(d);
+            }
+        })();
+
         const games = [
-            { name: "8 Ball Pool", url: "8ballpool.html" },
-            { name: "OvO 3 Dimensions", url: "ovo3.html", note: "tested" },
-            { name: "Crossy Road", url: "crossyroad.htm", note: "tested" },
-            { name: "Baldi's Basics Plus", url: "baldi.html", note: "tested" },
-            { name: "Flappy Bird", url: "https://gititgit1113.github.io/wixland/flop/index.html", note: "tested" },
-            { name: "2048", url: "https://gititgit1113.github.io/wixland/2048.html", note: "tested" },
-            { name: "Minecraft Classic", url: "https://classic.minecraft.net/", note: "PC-only" },
-            { name: "Minecraft 1.12.2", url: "eagle1122.html", note: "PC-only" },
-            { name: "FNaF", url: "fnaf.html", note: "tested" },
-            { name: "Geometry Dash", url: "gd.html", note: "tested" },
-            { name: "Pacman", url: "pacman.html", note: "tested" },
-            { name: "Angry Birds", url: "angrybirds.html", note: "PC-only" },
-            { name: "Stickman Hook", url: "stickmanhook.html", note: "tested" },    
-            { name: "Hole.io", url: "holeio.html", note: "tested" },
-            { name: "Super Mario 64", url: "sm64.html", note: "PC-only" },
-            { name: "Melon Playground", url: "melonplayground.html", note: "PC-only" },
-            { name: "Gorilla Tag", url: "https://gititgit1113.github.io/gorilla-tag-html", note: "PC-only" },
-            { name: "Sonic 1 Mania Edition", url: "Sonic 1 Mania Edition.html", note: "new" }
+            {name:"8 Ball Pool",url:"8ballpool.html"},
+            {name:"OvO 3 Dimensions",url:"ovo3.html",note:"tested"},
+            {name:"Crossy Road",url:"crossyroad.htm",note:"tested"},
+            {name:"Baldi's Basics Plus",url:"baldi.html",note:"tested"},
+            {name:"Flappy Bird",url:"https://gititgit1113.github.io/wixland/flop/index.html",note:"tested"},
+            {name:"2048",url:"https://gititgit1113.github.io/wixland/2048.html",note:"tested"},
+            {name:"Minecraft Classic",url:"https://classic.minecraft.net/",note:"PC-only"},
+            {name:"Minecraft 1.12.2",url:"eagle1122.html",note:"PC-only"},
+            {name:"FNaF",url:"fnaf.html",note:"tested"},
+            {name:"Geometry Dash",url:"gd.html",note:"tested"},
+            {name:"Pacman",url:"pacman.html",note:"tested"},
+            {name:"Angry Birds",url:"angrybirds.html",note:"PC-only"},
+            {name:"Stickman Hook",url:"stickmanhook.html",note:"tested"},
+            {name:"Hole.io",url:"holeio.html",note:"tested"},
+            {name:"Super Mario 64",url:"sm64.html",note:"PC-only"},
+            {name:"Melon Playground",url:"melonplayground.html",note:"PC-only"},
+            {name:"Gorilla Tag",url:"https://gititgit1113.github.io/gorilla-tag-html",note:"WIP"},
+            {name:"Sonic 1 Mania Edition",url:"Sonic 1 Mania Edition.html",note:"tested"},
+            {name:"Backrooms",url:"backrooms.html",note:"new"}
         ];
 
-        const grid = document.getElementById('gameGrid');
+        const homePanel = document.getElementById('homePanel');
+        const gamesPanel = document.getElementById('gamesPanel');
+        const navHome = document.getElementById('navHome');
+        const navGames = document.getElementById('navGames');
         const searchInput = document.getElementById('searchInput');
         const gameCount = document.getElementById('gameCount');
+        const grid = document.getElementById('gameGrid');
         const modal = document.getElementById('gameModal');
         const modalTitle = document.getElementById('modalGameTitle');
         const gameFrame = document.getElementById('gameFrame');
         const closeBtn = document.getElementById('closeModalBtn');
         const fullscreenBtn = document.getElementById('fullscreenBtn');
 
-        function renderGames(filter = '') {
-            const term = filter.toLowerCase();
-            const filtered = games.filter(g => g.name.toLowerCase().includes(term));
-            
+        function setPanel(panel) {
+            if(panel === 'home') {
+                homePanel.style.display = 'flex';
+                gamesPanel.style.display = 'none';
+                navHome.classList.add('active');
+                navGames.classList.remove('active');
+            } else {
+                homePanel.style.display = 'none';
+                gamesPanel.style.display = 'block';
+                navGames.classList.add('active');
+                navHome.classList.remove('active');
+                renderGames();
+            }
+        }
+
+        function renderGames(filterText = '') {
+            const term = filterText.toLowerCase();
+            const filtered = games.filter(game => game.name.toLowerCase().includes(term));
             gameCount.textContent = filtered.length + ' game' + (filtered.length !== 1 ? 's' : '');
             
-            if (filtered.length === 0) {
-                grid.innerHTML = '<div class="no-results">✨ no games match · try another search</div>';
+            if(filtered.length === 0) {
+                grid.innerHTML = '<div class="no-results">no games found</div>';
                 return;
             }
 
             let html = '';
             filtered.forEach(game => {
-                html += `
-                    <div class="game-card" data-name="${game.name}" data-url="${game.url}">
-                        <div class="game-title">${game.name}</div>
-                        ${game.note ? `<div class="pointer-note">${game.note}</div>` : ''}
-                    </div>
-                `;
+                html += '<div class="game-card" data-name="' + game.name + '" data-url="' + game.url + '">' +
+                        '<div class="game-title">' + game.name + '</div>' +
+                        (game.note ? '<div class="pointer-note">' + game.note + '</div>' : '') +
+                        '</div>';
             });
             grid.innerHTML = html;
 
-            document.querySelectorAll('.game-card').forEach(card => {
-                card.addEventListener('click', () => {
-                    const name = card.dataset.name;
-                    const url = card.dataset.url;
-                    modalTitle.textContent = name;
-                    gameFrame.src = url;
+            const cards = document.querySelectorAll('.game-card');
+            for(let i = 0; i < cards.length; i++) {
+                const card = cards[i];
+                card.addEventListener('click', function() {
+                    modalTitle.textContent = card.dataset.name;
+                    gameFrame.src = card.dataset.url;
                     modal.classList.add('active');
                 });
-            });
+            }
         }
 
-        searchInput.addEventListener('input', (e) => {
-            renderGames(e.target.value);
+        navHome.addEventListener('click', function() { setPanel('home'); });
+        navGames.addEventListener('click', function() { setPanel('games'); });
+
+        searchInput.addEventListener('input', function(e) {
+            if(gamesPanel.style.display !== 'none') {
+                renderGames(e.target.value);
+            }
         });
 
-        closeBtn.addEventListener('click', () => {
+        closeBtn.addEventListener('click', function() {
             modal.classList.remove('active');
             gameFrame.src = 'about:blank';
         });
 
-        fullscreenBtn.addEventListener('click', () => {
+        fullscreenBtn.addEventListener('click', function() {
             const container = document.querySelector('.modal-content');
-            if (container.requestFullscreen) {
+            if(container.requestFullscreen) {
                 container.requestFullscreen();
+            } else if(container.webkitRequestFullscreen) {
+                container.webkitRequestFullscreen();
             }
         });
 
-        modal.addEventListener('click', (e) => {
-            if (e.target === modal) {
+        modal.addEventListener('click', function(e) {
+            if(e.target === modal) {
                 modal.classList.remove('active');
                 gameFrame.src = 'about:blank';
             }
         });
 
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && modal.classList.contains('active')) {
+        document.addEventListener('keydown', function(e) {
+            if(e.key === 'Escape' && modal.classList.contains('active')) {
                 modal.classList.remove('active');
                 gameFrame.src = 'about:blank';
             }
         });
 
         renderGames();
+        setPanel('home');
     </script>
 </body>
 </html>
