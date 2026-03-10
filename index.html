@@ -6,75 +6,309 @@
     <title>canva's space</title>
     <style>
         *{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',Roboto,system-ui,sans-serif;}
-        body{min-height:100vh;background:#000;color:#fff;overflow-x:hidden;}
-        #stars{position:fixed;top:0;left:0;width:100%;height:100%;background:#000;z-index:0;transform:translateZ(0);will-change:transform;}
+        body{min-height:100vh;background:#000;color:#fff;overflow-x:hidden;transition:background 0.3s, color 0.3s;}
+        body.theme-dark{background:#000;color:#fff;}
+        body.theme-light{background:#f0f0f0;color:#222;}
+        body.theme-miku{background:#00b8b8;color:#e0ffff;}
+        body.theme-teto{background:#c04040;color:#ffe0e0;}
+        body.theme-neru{background:#d4af37;color:#2c2c2c;}
+        
+        #stars{position:fixed;top:0;left:0;width:100%;height:100%;background:#000;z-index:0;transform:translateZ(0);will-change:transform;transition:opacity 0.3s;}
+        body.theme-light #stars, body.theme-miku #stars, body.theme-teto #stars, body.theme-neru #stars{opacity:0.3;}
+        
         @keyframes d{0%{transform:translate(0,0);}100%{transform:translate(8px,12px);}}
         .s{position:absolute;background:#fff;border-radius:50%;width:2px;height:2px;box-shadow:0 0 6px #fff;opacity:0.8;animation:d 25s infinite alternate ease-in-out;will-change:transform;}
         .s.m{width:3px;height:3px;box-shadow:0 0 10px #fff;}
         .s.l{width:4px;height:4px;box-shadow:0 0 14px #fff;}
+        
+        .miku-plush, .teto-plush, .neru-plush{position:fixed;bottom:20px;left:20px;width:120px;height:120px;background-size:contain;background-repeat:no-repeat;background-position:center;z-index:1000;pointer-events:none;display:none;}
+        .miku-plush{background-image:url('plushmiku.png');}
+        .teto-plush{background-image:url('plushteto.png');}
+        .neru-plush{background-image:url('plushneru.png');}
+        body.theme-miku .miku-plush{display:block;}
+        body.theme-teto .teto-plush{display:block;}
+        body.theme-neru .neru-plush{display:block;}
+        
         .main-layout{display:flex;min-height:100vh;position:relative;z-index:5;}
-        .side-nav{width:80px;background:rgba(0,0,0,0.8);backdrop-filter:blur(4px);border-left:1px solid #2a3f5a;display:flex;flex-direction:column;align-items:center;padding:2rem 0;gap:2rem;position:fixed;right:0;top:0;bottom:0;z-index:20;}
+        .side-nav{width:80px;background:rgba(0,0,0,0.8);backdrop-filter:blur(4px);border-left:1px solid #2a3f5a;display:flex;flex-direction:column;align-items:center;padding:2rem 0;gap:2rem;position:fixed;right:0;top:0;bottom:0;z-index:20;transition:background 0.3s, border-color 0.3s;}
+        body.theme-light .side-nav{background:rgba(255,255,255,0.8);border-left-color:#aaa;}
+        body.theme-miku .side-nav{background:rgba(0,150,150,0.8);border-left-color:#00ffff;}
+        body.theme-teto .side-nav{background:rgba(180,60,60,0.8);border-left-color:#ff8080;}
+        body.theme-neru .side-nav{background:rgba(200,160,50,0.8);border-left-color:#ffff80;}
+        
         .nav-item{display:flex;flex-direction:column;align-items:center;color:#a0b5d0;cursor:pointer;width:100%;padding:0.7rem 0;border-radius:40px 0 0 40px;transition:0.15s;}
         .nav-item.active{background:linear-gradient(90deg,transparent,#132337);border-right:4px solid #5f9eff;color:#fff;text-shadow:0 0 5px #5f9eff;}
+        body.theme-light .nav-item{color:#555;}
+        body.theme-light .nav-item.active{background:linear-gradient(90deg,transparent,#ccc);border-right-color:#888;color:#000;}
+        body.theme-miku .nav-item.active{background:linear-gradient(90deg,transparent,#006666);border-right-color:#00ffff;color:#fff;}
+        body.theme-teto .nav-item.active{background:linear-gradient(90deg,transparent,#8b2e2e);border-right-color:#ffb3b3;color:#fff;}
+        body.theme-neru .nav-item.active{background:linear-gradient(90deg,transparent,#b38f2e);border-right-color:#ffffb3;color:#000;}
+        
         .nav-icon{font-size:2rem;margin-bottom:0.2rem;}
         .nav-label{font-size:0.75rem;letter-spacing:0.5px;}
         .content-area{flex:1;margin-right:80px;padding:1.5rem;max-width:calc(100% - 80px);display:flex;align-items:center;justify-content:center;z-index:10;}
         .home-panel{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;width:100%;gap:2rem;}
         .games-panel{display:none;width:100%;}
-        .settings-panel{display:none;width:100%;max-width:600px;margin:0 auto;background:rgba(10,20,35,0.7);backdrop-filter:blur(12px);border:1px solid #2f5690;border-radius:32px;padding:2rem;}
-        .settings-panel.active{display:block;}
-        .main-title{font-size:5rem;font-weight:700;background:linear-gradient(145deg,#fff 0%,#c0d5ff 80%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;filter:drop-shadow(0 0 20px #2f6eb0);line-height:1.2;margin-bottom:0.5rem;}
-        .version-text{font-size:1rem;color:#7f8fa3;background:rgba(20,30,45,0.5);padding:0.3rem 1.2rem;border-radius:60px;backdrop-filter:blur(2px);border:1px solid #2d4057;}
+        .settings-panel{display:none;width:100%;max-width:600px;margin:0 auto;background:rgba(10,20,35,0.7);backdrop-filter:blur(12px);border:1px solid #2f5690;border-radius:32px;padding:2rem;transition:background 0.3s, border-color 0.3s;}
+        body.theme-light .settings-panel{background:rgba(255,255,255,0.8);border-color:#aaa;}
+        body.theme-miku .settings-panel{background:rgba(0,100,100,0.7);border-color:#00ffff;}
+        body.theme-teto .settings-panel{background:rgba(140,50,50,0.7);border-color:#ff8080;}
+        body.theme-neru .settings-panel{background:rgba(180,140,50,0.7);border-color:#ffff80;}
         
-        .proxy-container{width:100%;background:rgba(0,0,0,0.6);border-radius:40px;padding:1.5rem;border:2px solid #2f5690;margin-top:1rem;}
-        .proxy-input-group{display:flex;gap:0.5rem;margin-bottom:1rem;flex-wrap:wrap;}
-        .proxy-input{flex:2;min-width:200px;background:rgba(5,10,20,0.9);border:2px solid #3a608a;border-radius:60px;padding:0.8rem 1.5rem;color:#fff;font-size:1rem;outline:none;}
-        .proxy-input:focus{border-color:#6b9eff;box-shadow:0 0 15px #2f5690;}
-        .proxy-btn{background:#1e3a5f;border:none;color:#fff;padding:0.8rem 1.8rem;border-radius:60px;font-size:1rem;font-weight:600;cursor:pointer;border:2px solid #4a7bb5;transition:0.1s;}
-        .proxy-btn:hover{background:#2b4f7a;transform:scale(0.98);}
-        .proxy-btn.secondary{background:#2a3f5a;border-color:#6d8bb0;}
-        .proxy-toggle{display:flex;gap:0.5rem;margin-bottom:1rem;background:rgba(0,0,0,0.4);padding:0.3rem;border-radius:60px;border:1px solid #3f6190;}
-        .proxy-mode{flex:1;padding:0.5rem;border-radius:60px;cursor:pointer;text-align:center;transition:0.1s;}
-        .proxy-mode.active{background:#2f5690;box-shadow:0 0 10px #2f5690;}
-        .proxy-frame-container{width:100%;height:400px;border-radius:24px;overflow:hidden;border:2px solid #2f5690;background:#0a1424;margin-top:1rem;display:none;}
-        .proxy-frame-container.active{display:block;}
-        #proxyFrame{width:100%;height:100%;border:none;}
+        .settings-panel.active{display:block;}
+        
+        .main-title {
+            font-size: 5rem;
+            font-weight: 700;
+            background: linear-gradient(145deg, #fff 0%, #c0d5ff 80%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 20px #2f6eb0);
+            line-height: 1.2;
+            margin-bottom: 0.5rem;
+        }
+        
+        body.theme-light .main-title,
+        body.theme-miku .main-title,
+        body.theme-teto .main-title,
+        body.theme-neru .main-title {
+            background: linear-gradient(145deg, #fff 0%, #c0d5ff 80%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .version-text{font-size:1rem;color:#7f8fa3;background:rgba(20,30,45,0.5);padding:0.3rem 1.2rem;border-radius:60px;backdrop-filter:blur(2px);border:1px solid #2d4057;}
+        body.theme-light .version-text{background:rgba(200,200,200,0.5);border-color:#aaa;color:#333;}
+        body.theme-miku .version-text{background:rgba(0,80,80,0.5);border-color:#00b8b8;color:#e0ffff;}
+        body.theme-teto .version-text{background:rgba(100,40,40,0.5);border-color:#c04040;color:#ffe0e0;}
+        body.theme-neru .version-text{background:rgba(150,120,30,0.5);border-color:#d4af37;color:#2c2c2c;}
         
         .settings-header{margin-bottom:2rem;text-align:center;}
         .settings-header h2{color:#d6eaff;font-size:2rem;margin-bottom:0.5rem;}
+        body.theme-light .settings-header h2{color:#333;}
+        body.theme-miku .settings-header h2{color:#aaffff;}
+        body.theme-teto .settings-header h2{color:#ffb3b3;}
+        body.theme-neru .settings-header h2{color:#ffffb3;}
+        
         .setting-item{margin-bottom:1.8rem;}
         .setting-label{color:#b5d0ff;margin-bottom:0.5rem;font-size:1rem;}
-        .setting-input{width:100%;background:rgba(5,10,20,0.9);border:2px solid #3a608a;border-radius:30px;padding:0.8rem 1.5rem;color:#fff;font-size:1rem;outline:none;}
+        body.theme-light .setting-label{color:#444;}
+        body.theme-miku .setting-label{color:#aaffff;}
+        body.theme-teto .setting-label{color:#ffb3b3;}
+        body.theme-neru .setting-label{color:#ffffb3;}
+        
+        .setting-input{width:100%;background:rgba(5,10,20,0.9);border:2px solid #3a608a;border-radius:30px;padding:0.8rem 1.5rem;color:#fff;font-size:1rem;outline:none;transition:0.1s;}
         .setting-input:focus{border-color:#6b9eff;}
+        body.theme-light .setting-input{background:rgba(255,255,255,0.9);border-color:#aaa;color:#000;}
+        body.theme-miku .setting-input{background:rgba(0,50,50,0.9);border-color:#00b8b8;color:#e0ffff;}
+        body.theme-teto .setting-input{background:rgba(80,30,30,0.9);border-color:#c04040;color:#ffe0e0;}
+        body.theme-neru .setting-input{background:rgba(100,80,20,0.9);border-color:#d4af37;color:#2c2c2c;}
+        
+        .tab-presets {
+            display: flex;
+            gap: 1rem;
+            margin-top: 0.5rem;
+        }
+        
+        .preset-btn {
+            flex: 1;
+            background: #1e3a5f;
+            border: 2px solid #4a7bb5;
+            color: #fff;
+            padding: 0.6rem;
+            border-radius: 30px;
+            cursor: pointer;
+            text-align: center;
+            font-weight: 600;
+            transition: 0.1s;
+            font-size: 0.9rem;
+        }
+        
+        .preset-btn:hover {
+            background: #2b4f7a;
+            transform: scale(0.98);
+        }
+        
+        .preset-btn.classroom {
+            background: #0b5e42;
+            border-color: #2ecc71;
+        }
+        
+        .preset-btn.classroom:hover {
+            background: #1a7b55;
+        }
+        
+        .preset-btn.kahoot {
+            background: #6b2e8f;
+            border-color: #a569bd;
+        }
+        
+        .preset-btn.kahoot:hover {
+            background: #8641b3;
+        }
+        
+        body.theme-light .preset-btn {
+            background: #aaa;
+            border-color: #888;
+            color: #000;
+        }
+        body.theme-light .preset-btn.classroom {
+            background: #0b5e42;
+            color: #fff;
+        }
+        body.theme-light .preset-btn.kahoot {
+            background: #6b2e8f;
+            color: #fff;
+        }
+        body.theme-miku .preset-btn,
+        body.theme-teto .preset-btn,
+        body.theme-neru .preset-btn {
+            opacity: 0.9;
+        }
+        
         .aboutblank-btn{background:#1e3a5f;border:2px solid #4a7bb5;color:#fff;padding:0.8rem;border-radius:30px;cursor:pointer;text-align:center;font-weight:600;transition:0.1s;}
         .aboutblank-btn:hover{background:#2b4f7a;}
+        body.theme-light .aboutblank-btn{background:#aaa;border-color:#888;color:#000;}
+        body.theme-light .aboutblank-btn:hover{background:#bbb;}
+        body.theme-miku .aboutblank-btn{background:#006666;border-color:#00ffff;color:#fff;}
+        body.theme-teto .aboutblank-btn{background:#8b2e2e;border-color:#ff8080;color:#fff;}
+        body.theme-neru .aboutblank-btn{background:#b38f2e;border-color:#ffff80;color:#000;}
+        
+        .theme-selector{display:grid;grid-template-columns:repeat(2,1fr);gap:0.8rem;margin:1rem 0;}
+        .theme-btn{padding:0.8rem;border-radius:30px;border:2px solid #3a608a;background:#1a2a40;color:#fff;cursor:pointer;text-align:center;transition:0.1s;}
+        .theme-btn:hover{background:#2f5690;}
+        .theme-btn.active{background:#2f5690;border-color:#6b9eff;}
+        body.theme-light .theme-btn{background:#ddd;border-color:#aaa;color:#000;}
+        body.theme-light .theme-btn:hover{background:#ccc;}
+        body.theme-light .theme-btn.active{background:#aaa;border-color:#888;}
+        body.theme-miku .theme-btn{background:#006666;border-color:#00b8b8;color:#e0ffff;}
+        body.theme-miku .theme-btn:hover{background:#008080;}
+        body.theme-miku .theme-btn.active{background:#00b8b8;border-color:#aaffff;}
+        body.theme-teto .theme-btn{background:#8b2e2e;border-color:#c04040;color:#ffe0e0;}
+        body.theme-teto .theme-btn:hover{background:#a04040;}
+        body.theme-teto .theme-btn.active{background:#c04040;border-color:#ffb3b3;}
+        body.theme-neru .theme-btn{background:#b38f2e;border-color:#d4af37;color:#2c2c2c;}
+        body.theme-neru .theme-btn:hover{background:#c9a540;}
+        body.theme-neru .theme-btn.active{background:#d4af37;border-color:#ffffb3;}
         
         .games-header{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:0.8rem;margin-bottom:2rem;background:rgba(0,0,0,0.4);backdrop-filter:blur(4px);padding:0.6rem 1.5rem;border-radius:50px;border:1px solid #2e4a6a;}
+        body.theme-light .games-header{background:rgba(255,255,255,0.4);border-color:#aaa;}
+        body.theme-miku .games-header{background:rgba(0,100,100,0.4);border-color:#00b8b8;}
+        body.theme-teto .games-header{background:rgba(100,40,40,0.4);border-color:#c04040;}
+        body.theme-neru .games-header{background:rgba(150,120,30,0.4);border-color:#d4af37;}
+        
         .search-box{background:rgba(5,10,20,0.8);border-radius:50px;padding:0.2rem 0.2rem 0.2rem 1.5rem;border:1px solid #3a608a;display:flex;align-items:center;width:220px;}
         .search-box input{background:transparent;border:none;padding:0.6rem 0;font-size:0.95rem;color:#fff;width:100%;outline:none;}
         .search-box input::placeholder{color:#7f99bb;}
+        body.theme-light .search-box{background:rgba(200,200,200,0.8);border-color:#aaa;}
+        body.theme-light .search-box input{color:#000;}
+        body.theme-light .search-box input::placeholder{color:#666;}
+        body.theme-miku .search-box{background:rgba(0,50,50,0.8);border-color:#00b8b8;}
+        body.theme-teto .search-box{background:rgba(80,30,30,0.8);border-color:#c04040;}
+        body.theme-neru .search-box{background:rgba(100,80,20,0.8);border-color:#d4af37;}
+        
         .count{background:#102433;padding:0.4rem 1.2rem;border-radius:50px;color:#b5d0ff;border:1px solid #2f5585;font-size:0.9rem;}
+        body.theme-light .count{background:#ddd;border-color:#aaa;color:#333;}
+        body.theme-miku .count{background:#006666;border-color:#00b8b8;color:#e0ffff;}
+        body.theme-teto .count{background:#8b2e2e;border-color:#c04040;color:#ffe0e0;}
+        body.theme-neru .count{background:#b38f2e;border-color:#d4af37;color:#2c2c2c;}
+        
         .game-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:1.2rem;margin:1.5rem 0;}
         .game-card{background:rgba(5,12,24,0.8);backdrop-filter:blur(4px);border:1px solid #2d4b73;border-radius:24px;padding:1.2rem 0.2rem 0.8rem;text-align:center;cursor:pointer;transition:0.15s;box-shadow:0 4px 0 #02060c;}
         .game-card:hover{transform:translateY(-3px);border-color:#6b9eff;box-shadow:0 8px 0 #02060c,0 0 15px #23487a;background:rgba(12,25,45,0.9);}
+        body.theme-light .game-card{background:rgba(240,240,240,0.8);border-color:#aaa;box-shadow:0 4px 0 #999;}
+        body.theme-light .game-card:hover{background:rgba(255,255,255,0.9);border-color:#888;box-shadow:0 8px 0 #999,0 0 15px #ccc;}
+        body.theme-miku .game-card{background:rgba(0,80,80,0.8);border-color:#00b8b8;}
+        body.theme-miku .game-card:hover{background:rgba(0,100,100,0.9);border-color:#aaffff;}
+        body.theme-teto .game-card{background:rgba(100,30,30,0.8);border-color:#c04040;}
+        body.theme-teto .game-card:hover{background:rgba(120,40,40,0.9);border-color:#ffb3b3;}
+        body.theme-neru .game-card{background:rgba(130,100,20,0.8);border-color:#d4af37;}
+        body.theme-neru .game-card:hover{background:rgba(150,120,30,0.9);border-color:#ffffb3;}
+        
         .game-title{font-weight:600;font-size:1rem;color:#e0edff;padding:0.2rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+        body.theme-light .game-title{color:#222;}
+        body.theme-miku .game-title{color:#e0ffff;}
+        body.theme-teto .game-title{color:#ffe0e0;}
+        body.theme-neru .game-title{color:#2c2c2c;}
+        
         .pointer-note{background:#1e3148;padding:0.2rem 0.6rem;border-radius:30px;font-size:0.65rem;color:#ffdcaa;display:inline-block;margin-top:0.4rem;border:1px solid #a3864a;}
+        body.theme-light .pointer-note{background:#ddd;border-color:#aaa;color:#333;}
+        body.theme-miku .pointer-note{background:#006666;border-color:#00b8b8;color:#ffffb3;}
+        body.theme-teto .pointer-note{background:#8b2e2e;border-color:#c04040;color:#ffffb3;}
+        body.theme-neru .pointer-note{background:#b38f2e;border-color:#d4af37;color:#000;}
+        
         .no-results{grid-column:1/-1;text-align:center;padding:2.5rem;background:rgba(0,0,0,0.6);border-radius:50px;color:#9bb5d9;border:2px dashed #3f6190;}
+        body.theme-light .no-results{background:rgba(200,200,200,0.6);border-color:#aaa;color:#333;}
+        body.theme-miku .no-results{background:rgba(0,50,50,0.6);border-color:#00b8b8;color:#e0ffff;}
+        body.theme-teto .no-results{background:rgba(80,30,30,0.6);border-color:#c04040;color:#ffe0e0;}
+        body.theme-neru .no-results{background:rgba(100,80,20,0.6);border-color:#d4af37;color:#2c2c2c;}
+        
         .modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.98);backdrop-filter:blur(16px);z-index:1000;justify-content:center;align-items:center;}
         .modal.active{display:flex;}
         .modal-content{width:96vw;height:94vh;background:#030812;border-radius:36px;border:2px solid #2f5690;display:flex;flex-direction:column;overflow:hidden;}
+        body.theme-light .modal-content{background:#f0f0f0;border-color:#aaa;}
+        body.theme-miku .modal-content{background:#006666;border-color:#00ffff;}
+        body.theme-teto .modal-content{background:#8b2e2e;border-color:#ff8080;}
+        body.theme-neru .modal-content{background:#b38f2e;border-color:#ffff80;}
+        
         .modal-header{display:flex;justify-content:space-between;align-items:center;padding:0.6rem 1.5rem;background:#0b1a2c;border-bottom:2px solid #26497a;}
+        body.theme-light .modal-header{background:#ddd;border-bottom-color:#aaa;}
+        body.theme-miku .modal-header{background:#004c4c;border-bottom-color:#00b8b8;}
+        body.theme-teto .modal-header{background:#6b2424;border-bottom-color:#c04040;}
+        body.theme-neru .modal-header{background:#8f6e25;border-bottom-color:#d4af37;}
+        
         .modal-header h2{color:#d6eaff;font-size:1.3rem;}
+        body.theme-light .modal-header h2{color:#222;}
+        body.theme-miku .modal-header h2{color:#e0ffff;}
+        body.theme-teto .modal-header h2{color:#ffe0e0;}
+        body.theme-neru .modal-header h2{color:#2c2c2c;}
+        
         .close-btn,.fullscreen-btn{background:#1d3452;border:none;color:#fff;width:38px;height:38px;border-radius:50%;font-size:1.4rem;cursor:pointer;border:1px solid #5b80b5;margin-left:0.4rem;display:inline-flex;align-items:center;justify-content:center;}
         .close-btn:hover{background:#b83b3b;}
         .fullscreen-btn:hover{background:#2f5f99;}
-        .game-frame-container{flex:1;background:#000;}
+        body.theme-light .close-btn,body.theme-light .fullscreen-btn{background:#aaa;border-color:#888;color:#000;}
+        body.theme-miku .close-btn,body.theme-miku .fullscreen-btn{background:#006666;border-color:#00b8b8;}
+        body.theme-teto .close-btn,body.theme-teto .fullscreen-btn{background:#8b2e2e;border-color:#c04040;}
+        body.theme-neru .close-btn,body.theme-neru .fullscreen-btn{background:#b38f2e;border-color:#d4af37;}
+        
+        .game-frame-container{flex:1;background:#000;position:relative;}
+        body.theme-light .game-frame-container{background:#f0f0f0;}
+        body.theme-miku .game-frame-container{background:#006666;}
+        body.theme-teto .game-frame-container{background:#8b2e2e;}
+        body.theme-neru .game-frame-container{background:#b38f2e;}
+        
         #gameFrame{width:100%;height:100%;border:none;background:#0b1424;}
-        .bypass-notice{background:#1e3a5f;color:#b5d0ff;padding:0.5rem;border-radius:30px;font-size:0.8rem;margin-top:0.5rem;border:1px solid #4a7bb5;}
+        body.theme-light #gameFrame{background:#f0f0f0;}
+        body.theme-miku #gameFrame{background:#006666;}
+        body.theme-teto #gameFrame{background:#8b2e2e;}
+        body.theme-neru #gameFrame{background:#b38f2e;}
+        
+        .warning-modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.95);backdrop-filter:blur(20px);z-index:2000;justify-content:center;align-items:center;}
+        .warning-modal.active{display:flex;}
+        .warning-content{max-width:500px;background:#1a1a2e;border-radius:40px;border:3px solid #ff4444;padding:2.5rem;text-align:center;box-shadow:0 0 50px rgba(255,68,68,0.3);animation: warningPulse 2s infinite;}
+        @keyframes warningPulse{0%{box-shadow:0 0 30px rgba(255,68,68,0.3);}50%{box-shadow:0 0 60px rgba(255,68,68,0.6);}100%{box-shadow:0 0 30px rgba(255,68,68,0.3);}}
+        .warning-title{font-size:3rem;font-weight:800;color:#ff4444;margin-bottom:1rem;text-shadow:0 0 20px #ff0000;}
+        .warning-desc{font-size:1.2rem;color:#fff;margin-bottom:2rem;line-height:1.5;}
+        .warning-btn{background:#ff4444;border:none;color:#fff;padding:1rem 3rem;border-radius:60px;font-size:1.3rem;font-weight:700;cursor:pointer;border:2px solid #ff8888;transition:0.1s;}
+        .warning-btn:hover{background:#ff6666;transform:scale(0.98);}
     </style>
 </head>
-<body>
+<body class="theme-dark">
     <div id="stars"></div>
+    
+    <div class="miku-plush"></div>
+    <div class="teto-plush"></div>
+    <div class="neru-plush"></div>
+    
+    <!-- Warning Modal for Roblox -->
+    <div id="warningModal" class="warning-modal">
+        <div class="warning-content">
+            <div class="warning-title">WARNING!!!</div>
+            <div class="warning-desc">you are about to open a website that doesn't work with frame bypasses. this will open in a new window to prevent errors.</div>
+            <button class="warning-btn" id="warningConfirmBtn">ALRIGHTY</button>
+        </div>
+    </div>
+    
     <div class="main-layout">
         <div class="side-nav">
             <div class="nav-item active" id="navHome"><div class="nav-icon">⌂</div><div class="nav-label">HOME</div></div>
@@ -84,23 +318,7 @@
         <div class="content-area">
             <div id="homePanel" class="home-panel">
                 <div class="main-title" id="dynamicTitle">canva's space</div>
-                <div class="version-text">version 2.0</div>
-                
-                <div class="proxy-container">
-                    <div class="proxy-toggle">
-                        <div class="proxy-mode active" data-mode="search">SEARCH</div>
-                        <div class="proxy-mode" data-mode="url">URL</div>
-                    </div>
-                    <div class="proxy-input-group">
-                        <input type="text" id="proxyInput" class="proxy-input" placeholder="search duckduckgo or enter url...">
-                        <button class="proxy-btn" id="proxyGoBtn">GO</button>
-                    </div>
-                    <button class="proxy-btn secondary" id="proxyBypassBtn" style="width:100%;">PROXY TIME!</button>
-                    <div class="bypass-notice" id="bypassNotice" style="display:none;">bypass by canvayys... (W.I.P.)</div>
-                    <div id="proxyFrameContainer" class="proxy-frame-container">
-                        <iframe id="proxyFrame" sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-modals allow-downloads allow-presentation allow-pointer-lock" allowfullscreen></iframe>
-                    </div>
-                </div>
+                <div class="version-text" id="versionText">version 1.7.3</div>
             </div>
             
             <div id="gamesPanel" class="games-panel">
@@ -124,8 +342,25 @@
                     <input type="url" id="faviconInput" class="setting-input" placeholder="https://example.com/favicon.ico">
                 </div>
                 <div class="setting-item">
+                    <div class="setting-label">Tab Presets</div>
+                    <div class="tab-presets">
+                        <button class="preset-btn classroom" id="classroomPreset">Google Classroom</button>
+                        <button class="preset-btn kahoot" id="kahootPreset">Kahoot!</button>
+                    </div>
+                </div>
+                <div class="setting-item">
                     <div class="setting-label">About:Blank Opener</div>
                     <div class="aboutblank-btn" id="aboutBlankBtn">OPEN IN ABOUT:BLANK</div>
+                </div>
+                <div class="setting-item">
+                    <div class="setting-label">Theme</div>
+                    <div class="theme-selector">
+                        <div class="theme-btn active" data-theme="dark">Dark</div>
+                        <div class="theme-btn" data-theme="light">Light</div>
+                        <div class="theme-btn" data-theme="miku">Hatsune Miku</div>
+                        <div class="theme-btn" data-theme="teto">Kasane Teto</div>
+                        <div class="theme-btn" data-theme="neru">Akita Neru</div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -176,7 +411,7 @@
             {name:"Gorilla Tag",url:"https://gititgit1113.github.io/gorilla-tag-html",note:"WIP"},
             {name:"Sonic 1 Mania Edition",url:"Sonic 1 Mania Edition.html",note:"tested"},
             {name:"Backrooms",url:"backrooms.html",note:"tested"},
-            {name:"Roblox [ngg]",url:"https://76.ip.nowgg.fun/apps/a/19900/b.html",note:"new"}
+            {name:"Roblox [ngg]",url:"roblox_warning",note:"external",robloxUrl:"https://188.ip.nowgg.fun/apps/a/19900/b.html"}
         ];
 
         const homePanel = document.getElementById('homePanel');
@@ -194,101 +429,59 @@
         const closeBtn = document.getElementById('closeModalBtn');
         const fullscreenBtn = document.getElementById('fullscreenBtn');
         
+        const warningModal = document.getElementById('warningModal');
+        const warningConfirmBtn = document.getElementById('warningConfirmBtn');
+        let pendingRobloxUrl = '';
+        
         const titleInput = document.getElementById('titleInput');
         const faviconInput = document.getElementById('faviconInput');
         const aboutBlankBtn = document.getElementById('aboutBlankBtn');
+        const classroomPreset = document.getElementById('classroomPreset');
+        const kahootPreset = document.getElementById('kahootPreset');
         const dynamicTitle = document.getElementById('dynamicTitle');
+        const versionText = document.getElementById('versionText');
         
-        const proxyInput = document.getElementById('proxyInput');
-        const proxyGoBtn = document.getElementById('proxyGoBtn');
-        const proxyBypassBtn = document.getElementById('proxyBypassBtn');
-        const proxyFrame = document.getElementById('proxyFrame');
-        const proxyFrameContainer = document.getElementById('proxyFrameContainer');
-        const proxyModes = document.querySelectorAll('.proxy-mode');
-        const bypassNotice = document.getElementById('bypassNotice');
-        
-        let proxyMode = 'search';
-        let currentProxyUrl = '';
+        const themeBtns = document.querySelectorAll('.theme-btn');
+        const body = document.body;
 
-        // corsproxy.io - stable CORS proxy
-        const corsProxy = 'https://corsproxy.io/?';
+        classroomPreset.addEventListener('click', function() {
+            document.title = 'Home - Classroom';
+            dynamicTitle.textContent = 'Home - Classroom';
+            titleInput.value = 'Home - Classroom';
+            faviconInput.value = 'classroom.ico';
+            
+            let link = document.querySelector("link[rel~='icon']");
+            if(!link) {
+                link = document.createElement('link');
+                link.rel = 'icon';
+                document.head.appendChild(link);
+            }
+            link.href = 'classroom.ico';
+        });
 
-        proxyModes.forEach(mode => {
-            mode.addEventListener('click', function() {
-                proxyModes.forEach(m => m.classList.remove('active'));
+        kahootPreset.addEventListener('click', function() {
+            document.title = 'Kahoot! | Learning games';
+            dynamicTitle.textContent = 'Kahoot! | Learning games';
+            titleInput.value = 'Kahoot! | Learning games';
+            faviconInput.value = 'kahoot.ico';
+            
+            let link = document.querySelector("link[rel~='icon']");
+            if(!link) {
+                link = document.createElement('link');
+                link.rel = 'icon';
+                document.head.appendChild(link);
+            }
+            link.href = 'kahoot.ico';
+        });
+
+        themeBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                themeBtns.forEach(b => b.classList.remove('active'));
                 this.classList.add('active');
-                proxyMode = this.dataset.mode;
-                proxyInput.placeholder = proxyMode === 'search' ? 'search duckduckgo...' : 'enter url (https://...)';
+                const theme = this.dataset.theme;
+                body.className = `theme-${theme}`;
             });
         });
-
-        function handleProxyGo(useBypass = false) {
-            const query = proxyInput.value.trim();
-            if(!query) return;
-            
-            let url;
-            if(proxyMode === 'search') {
-                // DuckDuckGo search URL that works well with iframes
-                url = `https://duckduckgo.com/?q=${encodeURIComponent(query)}`;
-            } else {
-                url = query.startsWith('http') ? query : 'https://' + query;
-            }
-            
-            currentProxyUrl = url;
-            
-            if(useBypass) {
-                // Use corsproxy.io to bypass frame restrictions
-                proxyFrame.src = corsProxy + encodeURIComponent(url);
-                bypassNotice.style.display = 'block';
-                bypassNotice.textContent = '✓ Bypass active - loading via corsproxy.io';
-            } else {
-                // Try direct load first
-                proxyFrame.src = url;
-                bypassNotice.style.display = 'none';
-                
-                // Check if iframe failed to load (for DDG)
-                setTimeout(() => {
-                    try {
-                        if(proxyFrame.contentDocument || proxyFrame.contentWindow) {
-                            // Check for error messages
-                            if(proxyFrame.contentDocument.body.innerText?.includes('refused to connect')) {
-                                console.log('Direct load failed, try bypass');
-                            }
-                        }
-                    } catch(e) {
-                        // Cross-origin error means it loaded but can't be accessed - that's fine
-                    }
-                }, 2000);
-            }
-            
-            proxyFrameContainer.classList.add('active');
-        }
-
-        proxyGoBtn.addEventListener('click', function() {
-            handleProxyGo(false);
-        });
-
-        proxyBypassBtn.addEventListener('click', function() {
-            handleProxyGo(true);
-        });
-        
-        proxyInput.addEventListener('keypress', function(e) {
-            if(e.key === 'Enter') handleProxyGo(false);
-        });
-
-        function openGameWithBypass(url, title) {
-            modalTitle.textContent = title;
-            
-            // Check if it's an external URL that might need bypass
-            if(url.startsWith('http') && !url.includes('.html') && !url.includes('eagle1122') && !url.includes('backrooms')) {
-                // Use corsproxy.io for external sites
-                gameFrame.src = corsProxy + encodeURIComponent(url);
-            } else {
-                gameFrame.src = url;
-            }
-            
-            modal.classList.add('active');
-        }
 
         titleInput.addEventListener('input', function() {
             document.title = this.value || 'canva\'s space';
@@ -322,6 +515,21 @@
                     </body>
                 </html>
             `);
+        });
+
+        warningConfirmBtn.addEventListener('click', function() {
+            if (pendingRobloxUrl) {
+                window.open(pendingRobloxUrl, '_blank');
+                pendingRobloxUrl = '';
+            }
+            warningModal.classList.remove('active');
+        });
+
+        warningModal.addEventListener('click', function(e) {
+            if (e.target === warningModal) {
+                warningModal.classList.remove('active');
+                pendingRobloxUrl = '';
+            }
         });
 
         function setPanel(panel) {
@@ -358,10 +566,17 @@
 
             let html = '';
             filtered.forEach(game => {
-                html += '<div class="game-card" data-name="' + game.name + '" data-url="' + game.url + '">' +
-                        '<div class="game-title">' + game.name + '</div>' +
-                        (game.note ? '<div class="pointer-note">' + game.note + '</div>' : '') +
-                        '</div>';
+                if (game.name === "Roblox [ngg]") {
+                    html += '<div class="game-card" data-name="' + game.name + '" data-roblox="true" data-url="' + game.robloxUrl + '">' +
+                            '<div class="game-title">' + game.name + '</div>' +
+                            (game.note ? '<div class="pointer-note">' + game.note + '</div>' : '') +
+                            '</div>';
+                } else {
+                    html += '<div class="game-card" data-name="' + game.name + '" data-url="' + game.url + '">' +
+                            '<div class="game-title">' + game.name + '</div>' +
+                            (game.note ? '<div class="pointer-note">' + game.note + '</div>' : '') +
+                            '</div>';
+                }
             });
             grid.innerHTML = html;
 
@@ -369,7 +584,14 @@
             for(let i = 0; i < cards.length; i++) {
                 const card = cards[i];
                 card.addEventListener('click', function() {
-                    openGameWithBypass(card.dataset.url, card.dataset.name);
+                    if (card.dataset.roblox === 'true') {
+                        pendingRobloxUrl = card.dataset.url;
+                        warningModal.classList.add('active');
+                    } else {
+                        modalTitle.textContent = card.dataset.name;
+                        gameFrame.src = card.dataset.url;
+                        modal.classList.add('active');
+                    }
                 });
             }
         }
@@ -409,6 +631,11 @@
             if(e.key === 'Escape' && modal.classList.contains('active')) {
                 modal.classList.remove('active');
                 gameFrame.src = 'about:blank';
+            }
+            
+            if(e.key === 'Escape' && warningModal.classList.contains('active')) {
+                warningModal.classList.remove('active');
+                pendingRobloxUrl = '';
             }
         });
 
